@@ -1,19 +1,19 @@
 import {getDiceRollArray, getDicePlaceholderHtml, getPercentage} from './utils.js'
 
-function Character(data) {
+class Character {
+    constructor(data) {
+        Object.assign(this, data)
+        this.maxHealth = this.health
+        this.diceHtml = getDicePlaceholderHtml(this.diceCount)
+    }
 
-    Object.assign(this, data)
-    this.diceArray = getDicePlaceholderHtml(this.diceCount)
-
-    this.maxHealth = this.health
-
-    this.getDiceHtml = function() {
+    setDiceHtml() {
         this.currentDiceScore = getDiceRollArray(this.diceCount)
-        this.diceArray = this.currentDiceScore.map(num =>
+        this.diceHtml = this.currentDiceScore.map(num =>
             `<div class="dice">${num}</div>`).join('')
     }
 
-    this.takeDamage = function(attackScoreArray) {
+    takeDamage(attackScoreArray) {
         const totalAttackScore = attackScoreArray.reduce((total, num) => total + num)
         this.health -= totalAttackScore
         if(this.health < 0) {
@@ -22,19 +22,18 @@ function Character(data) {
         }
     }
 
-    this.getHealthBarHtml = function() {
+    getHealthBarHtml() {
         const percent = getPercentage(this.health, this.maxHealth)
-
         return `
         <div class="health-bar-outer">
-            <div class="health-bar-inner ${percent < 26 ? "danger" : ""} " 
+            <div class="health-bar-inner ${percent < 26 ? "danger" : ""}" 
             style="width: ${percent}%;">
             </div>
         </div>`
     }
 
-    this.getCharacterHtml = function() {
-        const {elementId, name, avatar, health, diceCount, diceArray} = this
+    getCharacterHtml() {
+        const { elementId, name, avatar, health, diceCount, diceHtml } = this
         const healthBar = this.getHealthBarHtml()
         return `
             <div class="character-card">
@@ -43,7 +42,7 @@ function Character(data) {
                 <p class="health">health: <b> ${health} </b></p>
                 ${healthBar}
                 <div class="dice-container">
-                    ${diceArray}
+                    ${diceHtml}
                 </div>
             </div> 
         `

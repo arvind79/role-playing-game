@@ -5,11 +5,6 @@ let monstersArray = ["orc", "demon", "goblin"];
 
 let isWaiting = false   //isWaiting = false means attack() can work, isWaiting = true means attack() can't work
 
-console.log(isWaiting)
-if(!isWaiting) {
-    console.log("aaa")
-}
-
 function getNewMonster() {
     const nextMonsterData = characterData[monstersArray.shift()]
     return nextMonsterData ? new Character(nextMonsterData) : {}
@@ -17,8 +12,8 @@ function getNewMonster() {
 
 function attack() {
     if(!isWaiting) {
-        wizard.getDiceHtml()
-        monster.getDiceHtml()
+        wizard.setDiceHtml()
+        monster.setDiceHtml()
         wizard.takeDamage(monster.currentDiceScore)
         monster.takeDamage(wizard.currentDiceScore)
         render()
